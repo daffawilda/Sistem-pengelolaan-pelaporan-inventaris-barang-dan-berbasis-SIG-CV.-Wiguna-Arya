@@ -18,27 +18,30 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-gray-50">
-    <div class="min-h-screen">
-        @include('layouts.navigation')
+    <div class="flex min-h-screen">
+        <!-- SIDEBAR -->
+        @include('layouts.sidebar')
 
-        <!-- Page Heading -->
-        @if (isset($header))
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endif
+        <!-- KONTEN UTAMA -->
+        <div class="flex-1 lg:ml-64">
+            <!-- Header (Opsional: Judul Halaman) -->
+            @if (isset($header))
+                <header class="bg-white shadow-sm">
+                    <div class="py-4 px-6">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endif
 
-        <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
+            <!-- Konten -->
+            <main class="p-6">
+                {{ $slot }}
+            </main>
+        </div>
     </div>
 
-    <!-- Leaflet JS (Hanya sekali, tanpa defer) -->
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     @stack('scripts')
 </body>
 </html>

@@ -22,6 +22,7 @@ class ProjectController extends Controller
     {
         $supervisors = User::where('role', 'mandor')->get();
         $executors = User::where('role', 'pelaksana')->get();
+        
         return view('projects.create', compact('supervisors', 'executors'));
     }
 
