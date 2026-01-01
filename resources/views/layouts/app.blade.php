@@ -16,23 +16,6 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-
-    <!-- Custom Styles -->
-    <style>
-        .leaflet-container {
-            height: 100%;
-            width: 100%;
-            border-radius: 0.5rem;
-        }
-        .custom-marker {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
 </head>
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen">
@@ -53,7 +36,9 @@
         </main>
     </div>
 
-    @stack('scripts')
+    <!-- Leaflet JS (Hanya sekali, tanpa defer) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    @stack('scripts')
 </body>
 </html>

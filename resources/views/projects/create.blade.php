@@ -5,7 +5,7 @@
 
     <div class="py-6">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-lg shadow p-6">
+            <div class="bg-white rounded-lg shadow p-6 ">
                 @if ($errors->any())
                     <div class="mb-6 p-4 bg-red-100 text-red-800 rounded">
                         <strong>Terjadi kesalahan:</strong>
@@ -16,10 +16,12 @@
                         </ul>
                     </div>
                 @endif
+
                 <form action="{{ route('projects.store') }}" method="POST">
                     @csrf
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Nama Proyek & Lokasi -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Nama Proyek *</label>
                             <input type="text" name="name" class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" required>
@@ -28,14 +30,24 @@
                             <label class="block text-sm font-medium text-gray-700">Lokasi *</label>
                             <input type="text" name="location" class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" required>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Latitude *</label>
-                            <input type="number" step="any" name="latitude" class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Longitude *</label>
-                            <input type="number" step="any" name="longitude" class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" required>
-                        </div>
+                    </div>
+
+                    <!-- PETA UNTUK PIN POINT -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Tentukan Lokasi Proyek di Peta *
+                        </label>
+                        <div id="project-map" class="w-full h-64 rounded-lg border border-gray-300 shadow-sm"></div>
+                        <input type="hidden" name="latitude" id="latitude" required>
+                        <input type="hidden" name="longitude" id="longitude" required>
+                        <p class="mt-2 text-sm text-gray-600">
+                            Klik di peta untuk menentukan lokasi proyek. Marker akan muncul secara otomatis.
+                        </p>
+                      
+                    </div>
+
+                    <!-- Status, Mandor, Pelaksana -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Status</label>
                             <select name="status" class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" required>
@@ -62,6 +74,7 @@
                         </div>
                     </div>
 
+                    <!-- Tombol Simpan & Batal -->
                     <div class="mt-6 flex gap-3">
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Simpan</button>
                         <a href="{{ route('projects.index') }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">Batal</a>
@@ -70,4 +83,29 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const map = L.map('project-map').setView([-6.8000, 111.0000], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            let marker = null;
+
+            // Tambahkan marker saat klik peta
+            map.on('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+
+                if (marker) map.removeLayer(marker);
+                marker = L.marker([lat, lng]).addTo(map);
+
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

@@ -30,9 +30,9 @@ class ProjectController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'location' => 'required|numeric|min:-90|max:90',
-            'latitude' => 'required|numeric|min:-180|max:180',
-            'longitude' => 'required|string',
+            'location' => 'required|string|max:255', // ✅ STRING, bukan numeric!
+            'latitude' => 'required|numeric|min:-90|max:90',
+            'longitude' => 'required|numeric|min:-180|max:180', 
             'status' => 'required|in:berjalan,tertunda,selesai',
             'supervisor_id' => 'required|exists:users,id',
             'executor_id' => 'required|exists:users,id',
@@ -54,7 +54,7 @@ class ProjectController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'location' => 'required|string',
+            'location' => 'required|string|max:255',
             'latitude' => 'required|numeric|min:-90|max:90',
             'longitude' => 'required|numeric|min:-180|max:180',
             'status' => 'required|in:berjalan,tertunda,selesai',

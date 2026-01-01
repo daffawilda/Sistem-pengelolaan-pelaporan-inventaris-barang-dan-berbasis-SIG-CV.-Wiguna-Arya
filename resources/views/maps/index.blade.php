@@ -71,5 +71,6 @@
                 .bindPopup(popupContent);
         });
     </script>
+    
     @endpush
 </x-app-layout>
