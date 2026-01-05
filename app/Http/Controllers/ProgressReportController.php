@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\ProgressReport;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class ProgressReportController extends Controller
 {
@@ -48,16 +49,23 @@ class ProgressReportController extends Controller
         if (auth()->user()->role !== 'mandor' || auth()->id() !== $project->supervisor_id) {
             abort(403);
         }
-
+        dd('masuk store');
         $request->validate([
             'progress_percentage' => 'required|integer|min:0|max:100',
             'description' => 'required|string',
             'report_date' => 'required|date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' // Maks 2MB
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:5120' // Maks 5mb
+        ],
+            [
+            'image.image' => 'File harus berupa gambar.',
+            'image.mimes' => 'Format gambar harus: jpeg, png, jpg, atau gif.',
+            'image.max' => 'Ukuran gambar maksimal 5 MB.',
+            'image.uploaded' => 'Gagal mengunggah gambar. Pastikan ukuran file tidak terlalu besar.',
         ]);
+        
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('progress_reports', 'public');
+            $imagePath = $request->file('image')->store('progress-reports', 'public');
         }   
         ProgressReport::create([
             'project_id' => $project->id,
@@ -65,10 +73,11 @@ class ProgressReportController extends Controller
             'progress_percentage' => $request->progress_percentage,
             'description' => $request->description,
             'report_date' => $request->report_date,
-            'image' => $imagePath
+            'image' => $imagePath,
         ]);
         return redirect()->route('projects.show', $project)->with('success', 'Laporan kemajuan berhasil disimpan.');
     }
+    
     public function storeFeedback(Request $request, ProgressReport $report)
     {
         $user = auth()->user();
@@ -85,7 +94,7 @@ class ProgressReportController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return back()->with('success', 'Feedback berhasil dikirim.');
+        return Redirect()->route('reports.show', $report)->with('success', 'Feedback berhasil dikirim.');
     }
 
     public function show(ProgressReport $report)

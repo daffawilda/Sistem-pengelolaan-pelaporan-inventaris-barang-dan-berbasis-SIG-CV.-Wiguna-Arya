@@ -56,9 +56,11 @@ Route::middleware(['auth', 'role:pelaksana,mandor,admin'])->group(function () {
     Route::get('/projects/{project}/reports', [ProgressReportController::class, 'showByProject'])
            ->name('reports.by-project');
     Route::get('/reports/{report}', [ProgressReportController::class, 'show'])->name('reports.show');
-    Route::post('/reports/{report}/feedback', [ProgressReportController::class, 'giveFeedback'])->name('reports.feedback');
 });
-
+// === FEEDBACK: HANYA UNTUK PELAKSANA & ADMIN ===
+Route::middleware(['auth', 'role:pelaksana,admin'])->group(function () {
+    Route::post('/reports/{report}', [ProgressReportController::class, 'storeFeedback'])->name('reports.feedback');
+});
 // Grup hanya butuh login (semua role bisa lihat daftar & detail)
 Route::middleware(['auth'])->group(function () {
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');

@@ -32,19 +32,20 @@
             </svg>
             Peta Proyek
         </a>
-
-        <!-- Inventaris Alat -->
-        <a href="{{ route('tools.index') }}" 
-           class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-gray-700 {{ request()->routeIs('tools.*') ? 'bg-gray-700' : '' }}">
+        @if (auth()->user()->role === 'admin')
+            <!-- Inventaris Alat -->
+            <a href="{{ route('tools.index') }}" 
+            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-gray-700 {{ request()->routeIs('tools.*') ? 'bg-gray-700' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
                 <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
             </svg>
             Inventaris Alat
-        </a>
+            </a>
+         @endif
 
         <!-- Peminjaman Alat -->
-        <a href="{{ route('borrowings.create') }}" 
+        <a href="{{ route('borrowings.index') }}" 
            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-gray-700 {{ request()->routeIs('tool-borrowings.*') ? 'bg-gray-700' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
