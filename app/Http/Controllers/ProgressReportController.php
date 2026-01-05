@@ -49,7 +49,6 @@ class ProgressReportController extends Controller
         if (auth()->user()->role !== 'mandor' || auth()->id() !== $project->supervisor_id) {
             abort(403);
         }
-        dd('masuk store');
         $request->validate([
             'progress_percentage' => 'required|integer|min:0|max:100',
             'description' => 'required|string',
