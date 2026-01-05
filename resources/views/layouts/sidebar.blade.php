@@ -53,7 +53,7 @@
         </a>
 
         <!-- Laporan Progres -->
-        @if(auth()->user()->role === 'pelaksana' || auth()->user()->role === 'mandor')
+        @if(auth()->user()->role === 'pelaksana' || auth()->user()->role === 'mandor'  || auth()->user()->role === 'admin')
             <a href="{{ route('reports.index') }}" 
                class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-gray-700 {{ request()->routeIs('reports.*') ? 'bg-gray-700' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -64,7 +64,7 @@
         @endif
 
         <!-- Kelola User (Hanya Pemilik) -->
-        @if(auth()->user()->role === 'pemilik')
+        @if(auth()->user()->role === 'admin')
             <a href="{{ route('users.index') }}" 
                class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-gray-700 {{ request()->routeIs('users.*') ? 'bg-gray-700' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

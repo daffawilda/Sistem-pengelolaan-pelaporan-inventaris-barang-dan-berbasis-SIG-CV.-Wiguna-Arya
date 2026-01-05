@@ -50,9 +50,13 @@ Route::middleware(['auth', 'role:mandor'])->group(function () {
 });
 
 // Pelaksana melihat laporan → hanya proyek yang dia kelola
-Route::middleware(['auth', 'role:pelaksana,mandor'])->group(function () {
+Route::middleware(['auth', 'role:pelaksana,mandor,admin'])->group(function () {
     Route::get('/reports', [ProgressReportController::class, 'index'])->name('reports.index');
+    // Detail: semua laporan dari satu proyek
+    Route::get('/projects/{project}/reports', [ProgressReportController::class, 'showByProject'])
+           ->name('reports.by-project');
     Route::get('/reports/{report}', [ProgressReportController::class, 'show'])->name('reports.show');
+    Route::post('/reports/{report}/feedback', [ProgressReportController::class, 'giveFeedback'])->name('reports.feedback');
 });
 
 // Grup hanya butuh login (semua role bisa lihat daftar & detail)
@@ -63,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/borrowings', [ToolBorrowingController::class, 'index'])->name('borrowings.index');
 });
 
-route::middleware(['auth','role:pemilik'])->group(function () {
+route::middleware(['auth','role:admin'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');    

@@ -3,12 +3,16 @@
     <div class="p-6 max-w-3xl">
         <h2 class="text-lg font-medium mb-4">Proyek: {{ $project->name }}</h2>
 
-        <form method="POST" action="{{ route('reports.store', $project) }}">
+        <form method="POST" action="{{ route('reports.store', $project) }}" enctype="multipart/form-data">
             @csrf
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium">Persentase Progres (%)</label>
                     <input type="number" name="progress_percentage" min="0" max="100" class="w-full border rounded p-2" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium">Gambar Progres (Opsional)</label>
+                    <input type="file" name="image" accept="image/*" class="mt-1 block w-full">
                 </div>
                 <div>
                     <label class="block text-sm font-medium">Deskripsi Progres</label>

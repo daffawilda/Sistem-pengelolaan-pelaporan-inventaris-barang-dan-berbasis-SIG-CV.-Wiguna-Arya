@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::where('role', '!=', 'pemilik')->get(); // sembunyikan diri sendiri
+        $users = User::all();
         return view('users.index', compact('users'));
     }
 
@@ -67,7 +67,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        if ($user->role === 'pemilik') {
+        if ($user->role === 'admin') {
             return redirect()->route('users.index')->with('error', 'Tidak dapat menghapus user pemilik!');
         }
 

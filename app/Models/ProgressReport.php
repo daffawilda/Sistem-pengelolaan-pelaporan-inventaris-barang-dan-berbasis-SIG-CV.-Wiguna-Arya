@@ -24,4 +24,12 @@ class ProgressReport extends Model
     {
         return $this->belongsTo(User::class, 'reporter_id');
     }
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'report_id');
+    }
+    public function image_url()
+    {
+        return $this->image ? asset('storage/' . $this->image) : null;
+    }
 }
