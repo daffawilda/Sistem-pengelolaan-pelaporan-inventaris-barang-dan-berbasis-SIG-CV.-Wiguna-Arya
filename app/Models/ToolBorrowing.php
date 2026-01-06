@@ -9,7 +9,7 @@ class ToolBorrowing extends Model
 {
     protected $fillable = [
         'tool_id', 'borrower_id', 'project_id', 'quantity',
-        'borrow_date', 'return_date', 'status'
+        'borrow_date', 'return_date', 'status', 'approved_by', 'approved_at', 'verified'
     ];
 
     public function tool()
@@ -25,5 +25,9 @@ class ToolBorrowing extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+    public function approveby()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }

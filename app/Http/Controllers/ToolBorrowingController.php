@@ -34,17 +34,10 @@ class ToolBorrowingController extends Controller
             'quantity' => 'required|integer|min:1',
             'borrow_date' => 'required|date',
         ]);
-
-        $tool = Tool::findOrFail($request->tool_id);
-
-        // Pastikan stok cukup
-        if ($request->quantity > $tool->stock) {
-            return back()->withErrors(['quantity' => 'Stok alat tidak mencukupi!']);
-        }
-
+        $tool = Tool::find($request->tool_id);
+        $verified = auth()->user()->role==='admin' ? 'approved' : 'pending';
         // Kurangi stok
-        $tool->decrement('stock', $request->quantity);
-
+        
         // Simpan peminjaman
         ToolBorrowing::create([
             'tool_id' => $request->tool_id,
@@ -53,9 +46,13 @@ class ToolBorrowingController extends Controller
             'quantity' => $request->quantity,
             'borrow_date' => $request->borrow_date,
             'status' => 'dipinjam',
+            'verified' => $verified
         ]);
+        if ($verified === 'approved') {
+            $tool->decrement('stock', $request->quantity); 
+        }
 
-        return redirect()->route('borrowings.index')->with('success', 'Alat berhasil dipinjam dan stok telah diperbarui!');
+        return redirect()->route('borrowings.index')->with('success', $verified?'Peminjaman alat berhasil disimpan dan stok dikurangi!':'Peminjaman alat berhasil disimpan!');
     }
 
     // Kembalikan alat
@@ -77,5 +74,49 @@ class ToolBorrowingController extends Controller
         ]);
 
         return back()->with('success', 'Alat berhasil dikembalikan dan stok diperbarui!');
+    }
+
+    public function approveBorrowing($id)
+    {
+        $borrowing = ToolBorrowing::findOrFail($id);
+
+        // Cek apakah sudah diproses
+        if ($borrowing->verified !== 'pending') {
+            return back()->with('error', 'Peminjaman ini sudah diproses sebelumnya.');
+        }
+
+        // Cek stok
+        if ($borrowing->quantity > $borrowing->tool->stock) {
+            return back()->with('error', 'Stok alat "' . $borrowing->tool->name . '" tidak mencukupi. Stok tersedia: ' . $borrowing->tool->stock);
+        }
+
+        // Update status verifikasi
+        $borrowing->update([
+            'verified' => 'approved',
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+        ]);
+
+        // Kurangi stok
+        $borrowing->tool->decrement('stock', $borrowing->quantity);
+
+        return back()->with('success', 'Peminjaman alat "' . $borrowing->tool->name . '" berhasil disetujui.');
+    }
+
+    public function rejectBorrowing(ToolBorrowing $borrowing)
+    {
+        // Cek apakah sudah diproses
+        if ($borrowing->verified !== 'pending') {
+            return back()->with('error', 'Peminjaman ini sudah diproses sebelumnya.');
+        }
+
+        // Update status verifikasi
+        $borrowing->update([
+            'verified' => 'rejected',
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+        ]);
+
+        return back()->with('success', 'Peminjaman alat "' . $borrowing->tool->name . '" telah ditolak.');
     }
 }

@@ -28,7 +28,8 @@
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Proyek</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Peminjam</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Jumlah</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status Alat</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Verifikasi</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
@@ -52,8 +53,40 @@
                                         </span>
                                     @endif
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($b->verified === 'pending')
+                                        <span class="px-2.5 py-0.5 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
+                                            Menunggu
+                                        </span>
+                                    @elseif($b->verified === 'approved')
+                                        <span class="px-2.5 py-0.5 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                                            Disetujui
+                                        </span>
+                                    @else
+                                        <span class="px-2.5 py-0.5 bg-red-100 text-red-800 text-xs font-medium rounded-full">
+                                            Ditolak
+                                        </span>
+                                    @endif
+
+                                    @if(auth()->user()->role === 'admin' && $b->verified === 'pending')
+                                        <div class="mt-1 flex space-x-2">
+                                            <form action="{{ route('borrowings.approve', $b->id) }}" method="POST" class="inline">
+                                                @csrf
+                                                <button type="submit" class="text-xs text-green-600 hover:text-green-800 font-medium">
+                                                    ✓ Setujui
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('borrowings.reject', $b->id) }}" method="POST" class="inline">
+                                                @csrf
+                                                <button type="submit" class="text-xs text-red-600 hover:text-red-800 font-medium">
+                                                    ✗ Tolak
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    @if($b->status === 'dipinjam' && (auth()->id() === $b->borrower_id || auth()->user()->role === 'admin'))
+                                    @if($b->status === 'dipinjam' && $b->verified === 'approved' && (auth()->id() === $b->borrower_id || auth()->user()->role === 'admin'))
                                         <form action="{{ route('borrowings.return', $b->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin mengembalikan alat ini?');">
                                             @csrf
                                             <button type="submit" class="text-green-600 hover:text-green-800 flex items-center">

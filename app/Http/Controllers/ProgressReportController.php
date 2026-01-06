@@ -74,7 +74,7 @@ class ProgressReportController extends Controller
             'report_date' => $request->report_date,
             'image' => $imagePath,
         ]);
-        return redirect()->route('projects.show', $project)->with('success', 'Laporan kemajuan berhasil disimpan.');
+        return redirect()->route('reports.index', $project)->with('success', 'Laporan kemajuan berhasil disimpan.');
     }
     
     public function storeFeedback(Request $request, ProgressReport $report)
