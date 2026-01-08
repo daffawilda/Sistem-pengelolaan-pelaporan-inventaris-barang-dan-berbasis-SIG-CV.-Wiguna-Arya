@@ -4,17 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use App\Models\Tool;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        // Ambil 3 proyek terbaru (bisa diurutkan berdasarkan created_at)
-        $latestProjects = Project::select('name', 'location', 'status')
-            ->orderBy('created_at', 'desc')
-            ->limit(3)
-            ->get();
+        $latestProjects = Project::whereNotNull('latitude')
+                            ->whereNotNull('longitude')
+                            ->with(['supervisor', 'executor', 'latestReport'])
+                            ->take(6)
+                            ->get();
+        
+        $availableTools = Tool::where('stock', '>', 0)->get();
 
-        return view('home', compact('latestProjects'));
+        return view('home', compact('latestProjects', 'availableTools'));
     }
 }

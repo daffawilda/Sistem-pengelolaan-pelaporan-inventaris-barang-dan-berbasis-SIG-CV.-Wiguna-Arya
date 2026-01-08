@@ -102,7 +102,8 @@ class ProgressReportController extends Controller
         // Hanya pelaksana proyek terkait yang bisa melihat
         if(
             $user->role === 'admin' ||
-            ($user->role === 'pelaksana' && $report->project->executor_id === $user->id)
+            ($user->role === 'pelaksana' && $report->project->executor_id === $user->id) ||
+            ($user->role === 'mandor' && $report->project->supervisor_id === $user->id)
         ){
             return view('reports.show', compact('report'));
         }

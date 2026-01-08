@@ -27,8 +27,8 @@
                                 </div>
                             @endif
                             <p class="mt-2">{{ $report->description }}</p>
-                            
-                            @if(auth()->user()->role !== 'mandor')
+
+                            @if(auth()->user()->role == 'mandor' || auth()->user()->role == 'admin' || auth()->user()->role == 'pelaksana')
                                 <div class="mt-3">
                                     <a href="{{ route('reports.show', $report) }}" 
                                        class="text-blue-600 hover:underline text-sm">

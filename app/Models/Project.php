@@ -32,4 +32,8 @@ class Project extends Model
     {
         return $this->hasMany(ProgressReport::class);
     }
+    public function latestReport()
+    {
+        return $this->hasOne(ProgressReport::class)->latest('report_date');
+    }
 }
