@@ -9,7 +9,15 @@ class ToolBorrowing extends Model
 {
     protected $fillable = [
         'tool_id', 'borrower_id', 'project_id', 'quantity',
-        'borrow_date', 'return_date', 'status', 'approved_by', 'approved_at', 'verified'
+        'borrow_date', 'return_date', 'status', 'approved_by', 'approved_at', 'verified',
+        'condition_before', 'condition_after', 'notes', 'received_by', 'received_at'
+    ];
+
+    protected $casts = [
+        'borrow_date' => 'date',
+        'return_date' => 'date',
+        'approved_at' => 'datetime',
+        'received_at' => 'datetime',
     ];
 
     public function tool()
@@ -26,8 +34,14 @@ class ToolBorrowing extends Model
     {
         return $this->belongsTo(Project::class);
     }
-    public function approveby()
+
+    public function approvedBy()
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function receivedBy()
+    {
+        return $this->belongsTo(User::class, 'received_by');
     }
 }

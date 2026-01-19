@@ -30,7 +30,6 @@ class DashboardController extends Controller
         // Admin & pemilik: lihat semua proyek
 
         $allProjects = $projectQuery->get();
-        $latestProjects = $projectQuery->clone()->orderBy('created_at', 'desc')->limit(5)->get();
 
         // Hitung statistik proyek
         $stats = [
@@ -48,6 +47,6 @@ class DashboardController extends Controller
             ->whereNotNull('longitude')
             ->get();
 
-        return view('dashboard', compact('stats', 'latestProjects', 'mapProjects'));
+        return view('dashboard', compact('stats', 'mapProjects', 'allProjects'));
     }
 }

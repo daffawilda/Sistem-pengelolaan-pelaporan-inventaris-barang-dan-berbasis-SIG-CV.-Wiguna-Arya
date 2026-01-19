@@ -28,6 +28,7 @@ class UserController extends Controller
             'role' => 'required|in:admin,pelaksana,mandor',
             'password' => 'required|string|min:6|confirmed',
         ]);
+        //dd($request->all());
 
         User::create([
             'name' => $request->name,
@@ -67,10 +68,9 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        if ($user->role === 'admin') {
-            return redirect()->route('users.index')->with('error', 'Tidak dapat menghapus user pemilik!');
+        if (auth()->id() == $user->id) {
+            return redirect()->route('users.index')->with('error', 'Anda tidak dapat menghapus diri sendiri!');
         }
-
         $user->delete();
         return redirect()->route('users.index')->with('success', 'User berhasil dihapus!');
     }

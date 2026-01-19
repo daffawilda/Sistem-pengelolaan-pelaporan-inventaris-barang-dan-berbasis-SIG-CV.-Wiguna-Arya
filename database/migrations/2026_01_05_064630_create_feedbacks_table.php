@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('feedbacks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('report_id')->constrained('progress_reports')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users'); // pelaksana/admin
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // pelaksana/admin
             $table->text('comment');
             $table->timestamps();
         });

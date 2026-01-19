@@ -23,7 +23,9 @@ return new class extends Migration
     public function down()
     {
         Schema::table('tool_borrowings', function (Blueprint $table) {
-            $table->dropColumn(['verified', 'approved_by', 'approved_at']);
+            $table->dropColumn('verified');
+            $table->dropConstrainedForeignId('approved_by');
+            $table->dropColumn('approved_at');
         });
     }
 };

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('progress_reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
-            $table->foreignId('reporter_id')->constrained('users'); // mandor
+            $table->foreignId('reporter_id')->constrained('users')->onDelete('cascade'); // mandor
             $table->text('description');
             $table->integer('progress_percentage')->unsigned()->default(0); // 0–100
             $table->date('report_date');

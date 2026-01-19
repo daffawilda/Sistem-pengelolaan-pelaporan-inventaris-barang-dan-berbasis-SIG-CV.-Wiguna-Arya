@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('tool_id')->constrained()->onDelete('cascade');
-            $table->foreignId('borrower_id')->constrained('users'); // mandor/pelaksana
+            $table->foreignId('borrower_id')->constrained('users')->onDelete('cascade'); // mandor/pelaksana
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->integer('quantity');
             $table->date('borrow_date');

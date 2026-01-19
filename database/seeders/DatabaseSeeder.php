@@ -15,11 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Seed the application's database dengan data dari wiguna_arya.sql
+        $this->call([
+            UserSeeder::class,
+            ProjectSeeder::class,
+            ToolSeeder::class,
+            ToolBorrowingSeeder::class,
+            ProgressReportSeeder::class,
+            FeedbackSeeder::class,
         ]);
     }
 }

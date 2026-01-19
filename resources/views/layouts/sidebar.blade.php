@@ -1,8 +1,16 @@
 <!-- resources/views/layouts/sidebar.blade.php -->
-<div class="w-64 bg-gray-800 text-white fixed h-full overflow-y-auto pt-6 hidden lg:block">
-    <div class="px-6 mb-8">
-        <h1 class="text-xl font-bold">CV. Wiguna Arya</h1>
-        <p class="text-gray-400 text-sm">Sistem Proyek & Inventaris</p>
+<div id="sidebar" class="w-64 bg-gray-800 text-white fixed h-full overflow-y-auto pt-6 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40">
+    <div class="px-6 mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-bold">CV. Wiguna Arya</h1>
+            <p class="text-gray-400 text-sm">Sistem Proyek & Inventaris</p>
+        </div>
+        <!-- Close button untuk mobile -->
+        <button id="close-sidebar" class="lg:hidden text-gray-300 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
     </div>
 
     <nav class="px-4 space-y-2">
@@ -87,3 +95,36 @@
         </form>
     </nav>
 </div>
+
+<!-- Overlay untuk mobile -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden lg:hidden z-30" onclick="closeSidebar();"></div>
+
+<!-- Script untuk toggle sidebar -->
+<script>
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.add('-translate-x-full');
+        document.getElementById('sidebar-overlay').classList.add('hidden');
+    }
+
+    function openSidebar() {
+        document.getElementById('sidebar').classList.remove('-translate-x-full');
+        document.getElementById('sidebar-overlay').classList.remove('hidden');
+    }
+
+    const closeSidebarBtn = document.getElementById('close-sidebar');
+    const sidebar = document.getElementById('sidebar');
+
+    if (closeSidebarBtn) {
+        closeSidebarBtn.addEventListener('click', closeSidebar);
+    }
+
+    // Close sidebar ketika link diklik
+    const navLinks = sidebar.querySelectorAll('a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth < 1024) {
+                closeSidebar();
+            }
+        });
+    });
+</script>

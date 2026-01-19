@@ -24,17 +24,29 @@
 
         <!-- KONTEN UTAMA -->
         <div class="flex-1 lg:ml-64">
-            <!-- Header (Opsional: Judul Halaman) -->
-            @if (isset($header))
-                <header class="bg-white shadow-sm">
-                    <div class="py-4 px-6">
-                        {{ $header }}
+            <!-- Header dengan Hamburger Menu -->
+            <header class="bg-white shadow-sm sticky top-0 z-20">
+                <div class="py-4 px-6 flex justify-between items-center">
+                    <!-- Hamburger Menu untuk Mobile -->
+                    <button id="open-sidebar" class="lg:hidden text-gray-600 hover:text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+
+                    <!-- Judul Halaman -->
+                    <div class="flex-1 lg:flex-none">
+                        @if (isset($header))
+                            <div class="ml-4 lg:ml-0">
+                                {{ $header }}
+                            </div>
+                        @endif
                     </div>
-                </header>
-            @endif
+                </div>
+            </header>
 
             <!-- Konten -->
-            <main class="p-6">
+            <main class="p-4 sm:p-6">
                 {{ $slot }}
             </main>
         </div>
@@ -42,6 +54,15 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const openSidebarBtn = document.getElementById('open-sidebar');
+        if (openSidebarBtn) {
+            openSidebarBtn.addEventListener('click', function() {
+                document.getElementById('sidebar').classList.remove('-translate-x-full');
+                document.getElementById('sidebar-overlay').classList.remove('hidden');
+            });
+        }
+    </script>
     @stack('scripts')
 </body>
 </html>

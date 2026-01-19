@@ -19,8 +19,8 @@ return new class extends Migration
             $table->double('latitude', 10, 7);
             $table->double('longitude', 10, 7);
             $table->enum('status', ['berjalan', 'tertunda', 'selesai'])->default('berjalan');
-            $table->foreignId('supervisor_id')->constrained('users'); // mandor
-            $table->foreignId('executor_id')->constrained('users');   // pelaksana
+            $table->foreignId('supervisor_id')->constrained('users')->onDelete('cascade'); // mandor
+            $table->foreignId('executor_id')->constrained('users')->onDelete('cascade');   // pelaksana
             $table->timestamps();
         });
     }

@@ -14,7 +14,6 @@ use App\Http\Controllers\{
 
 // --- PUBLIC ROUTES ---
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
 // --- AUTHENTICATED ROUTES ---
 Route::middleware(['auth'])->group(function () {
     
@@ -27,22 +26,26 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/profile', 'destroy')->name('profile.destroy');
     });
 
+    // --- ROLE: ADMIN ONLY ---
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('users', UserController::class)->except(['show']);
+        // Project Management (CRUD)
+        Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+        Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+        Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+        Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+        Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
+        Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+    });
+
     // General Access (Semua Role)
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::get('/maps', [ProjectController::class, 'map'])->name('projects.map');
     Route::get('/borrowings', [ToolBorrowingController::class, 'index'])->name('borrowings.index');
 
-    // --- ROLE: ADMIN ONLY ---
-    Route::middleware('role:admin')->group(function () {
-        Route::resource('users', UserController::class)->except(['show']);
-    });
-
     // --- ROLE: ADMIN & PELAKSANA ---
     Route::middleware('role:admin,pelaksana')->group(function () {
-        // Project Management (CRUD)
-        Route::resource('projects', ProjectController::class)->except(['index', 'show']);
-        
         // Tool Management (CRUD)
         Route::resource('tools', ToolController::class);
         

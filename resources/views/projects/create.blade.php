@@ -87,7 +87,7 @@
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const map = L.map('project-map').setView([-6.8000, 111.0000], 13);
+            const map = L.map('project-map').setView([-7.0990, 110.9110], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);

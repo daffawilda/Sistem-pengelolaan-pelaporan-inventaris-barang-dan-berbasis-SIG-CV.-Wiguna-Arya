@@ -31,7 +31,7 @@
             </div>
 
             <!-- Proyek Terbaru -->
-            @if($latestProjects->isNotEmpty())
+            @if($allProjects->isNotEmpty())
             <div class="bg-white rounded-xl shadow overflow-hidden">
                 <div class="p-4 border-b border-gray-200">
                     <h3 class="font-semibold text-lg text-gray-800">Proyek Terbaru</h3>
@@ -48,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
-                            @foreach($latestProjects as $p)
+                            @foreach($allProjects as $p)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-4 py-3 font-medium">{{ $p->name }}</td>
                                 <td class="px-4 py-3 text-sm">{{ $p->location }}</td>

@@ -14,12 +14,28 @@ class ProjectController extends Controller
 
     public function index()
     {
+        if (Auth::user()->role === 'pelaksana') {
+            // Pelaksana hanya melihat proyek yang dia kerjakan
+            $projects = Project::with(['supervisor', 'executor'])
+                ->where('executor_id', Auth::id())
+                ->get();
+        } elseif (Auth::user()->role === 'mandor') {
+            // Mandor hanya melihat proyek yang dia supervisi
+            $projects = Project::with(['supervisor', 'executor'])
+                ->where('supervisor_id', Auth::id())
+                ->get();
+        } else {
+        // Admin & pemilik: lihat semua proyek
         $projects = Project::with(['supervisor', 'executor'])->get();
+        }
         return view('projects.index', compact('projects'));
     }
 
     public function create()
     {
+        if (!in_array(auth()->user()->role, ['admin'])) {
+            abort(403, 'Akses ditolak.');
+        }
         $supervisors = User::where('role', 'mandor')->get();
         $executors = User::where('role', 'pelaksana')->get();
         
@@ -46,6 +62,9 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
+        if (!in_array(auth()->user()->role, ['admin'])) {
+            abort(403, 'Akses ditolak.');
+        }
         $supervisors = User::where('role', 'mandor')->get();
         $executors = User::where('role', 'pelaksana')->get();
         return view('projects.edit', compact('project', 'supervisors', 'executors'));
@@ -70,6 +89,15 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        // Eager load relasi untuk performa optimal
+        $project->load([
+            'supervisor',
+            'executor',
+            'progressReports' => function ($query) {
+                $query->with(['reporter', 'feedbacks.user'])->latest('report_date');
+            }
+        ]);
+        
         return view('projects.show', compact('project'));
     }
 
